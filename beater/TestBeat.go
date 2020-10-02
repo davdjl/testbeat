@@ -43,24 +43,39 @@ func (bt *testbeat) Run(b *beat.Beat) error {
 	}
 
 	ticker := time.NewTicker(bt.config.Period)
-	counter := 1
+	currentID := loadState()
+	logp.Info( fmt.Sprintf("CurrentID: %d",currentID))
+	startConection()
 	for {
 		select {
 		case <-bt.done:
 			return nil
 		case <-ticker.C:
 		}
-
-		event := beat.Event{
-			Timestamp: time.Now(),
-			Fields: common.MapStr{
-				"type":    b.Info.Name,
-				"counter": counter,
-			},
+		// Read employees
+		persons, err := ReadEmployees(currentID)
+		if err != nil {
+			logp.Error(err)
 		}
-		bt.client.Publish(event)
-		logp.Info("Event sent")
-		counter++
+		if persons != nil {
+			currentID = persons[len(persons)-1].id
+			for _,p:= range persons{
+				event := beat.Event{
+					Timestamp: time.Now(),
+					Fields: common.MapStr{
+						"type":    b.Info.Name,
+						"name": p.name,
+						"id": p.id,
+						"location": p.location,
+					},
+				}
+				bt.client.Publish(event)
+				logp.Info(fmt.Sprintf("Registro (%s) enviado",p.name))
+			}
+		} else {
+			logp.Info("Estas al dia!")
+		}
+		storeState(currentID)
 	}
 }
 

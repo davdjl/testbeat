@@ -8695,13 +8695,37 @@ alias to: process.executable
 None
 
 
-*`counter`*::
+*`name`*::
++
+--
+PLEASE UPDATE DOCUMENTATION
+
+
+type: text
+
+required: True
+
+--
+
+*`id`*::
 +
 --
 PLEASE UPDATE DOCUMENTATION
 
 
 type: long
+
+required: True
+
+--
+
+*`location`*::
++
+--
+PLEASE UPDATE DOCUMENTATION
+
+
+type: text
 
 required: True
 

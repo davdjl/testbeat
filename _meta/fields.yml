@@ -2,8 +2,19 @@
   title: testbeat
   description:
   fields:
-    - name: counter
+    - name: name
+      type: text
+      required: true
+      description: >
+        PLEASE UPDATE DOCUMENTATION
+    - name: id
       type: long
       required: true
       description: >
         PLEASE UPDATE DOCUMENTATION
+    - name: location
+      type: text
+      required: true
+      description: >
+        PLEASE UPDATE DOCUMENTATION
+
