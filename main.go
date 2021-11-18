@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/jackcloudman/testbeat/cmd"
+	"github.com/davdjl/testbeat/cmd"
 
-	_ "github.com/jackcloudman/testbeat/include"
+	_ "github.com/davdjl/testbeat/include"
 )
 
 func main() {

@@ -20,7 +20,7 @@ func init() {
 	devtools.SetBuildVariableSources(devtools.DefaultBeatBuildVariableSources)
 
 	devtools.BeatDescription = "One sentence description of the Beat."
-	devtools.BeatVendor = "Jack Cloudman"
+	devtools.BeatVendor = "Davdjl"
 	devtools.BeatProjectType = devtools.CommunityProject
 	devtools.CrossBuildMountModcache = true
 }

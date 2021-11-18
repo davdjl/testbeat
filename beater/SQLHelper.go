@@ -46,45 +46,6 @@ func startConection() {
 	}
 	fmt.Printf("Connected!\n")
 }
-// CreateEmployee inserts an employee record
-func CreateEmployee(name string, location string) (int64, error) {
-	ctx := context.Background()
-	var err error
-
-	if db == nil {
-		err = errors.New("CreateEmployee: db is null")
-		return -1, err
-	}
-
-	// Check if database is alive.
-	err = db.PingContext(ctx)
-	if err != nil {
-		return -1, err
-	}
-
-	tsql := `
-      INSERT INTO TestSchema.Employees (Name, Location) VALUES (@Name, @Location);
-      select isNull(SCOPE_IDENTITY(), -1);
-    `
-
-	stmt, err := db.Prepare(tsql)
-	if err != nil {
-		return -1, err
-	}
-	defer stmt.Close()
-
-	row := stmt.QueryRowContext(
-		ctx,
-		sql.Named("Name", name),
-		sql.Named("Location", location))
-	var newID int64
-	err = row.Scan(&newID)
-	if err != nil {
-		return -1, err
-	}
-
-	return newID, nil
-}
 
 // ReadEmployees reads all employee records
 func ReadEmployees(currentID int) ([]Person, error) {
@@ -123,50 +84,4 @@ func ReadEmployees(currentID int) ([]Person, error) {
 		//fmt.Printf("ID: %d, Name: %s, Location: %s\n", id, name, location)
 	}
 	return persons, nil
-}
-
-// UpdateEmployee updates an employee's information
-func UpdateEmployee(name string, location string) (int64, error) {
-	ctx := context.Background()
-
-	// Check if database is alive.
-	err := db.PingContext(ctx)
-	if err != nil {
-		return -1, err
-	}
-
-	tsql := fmt.Sprintf("UPDATE TestSchema.Employees SET Location = @Location WHERE Name = @Name")
-
-	// Execute non-query with named parameters
-	result, err := db.ExecContext(
-		ctx,
-		tsql,
-		sql.Named("Location", location),
-		sql.Named("Name", name))
-	if err != nil {
-		return -1, err
-	}
-
-	return result.RowsAffected()
-}
-
-// DeleteEmployee deletes an employee from the database
-func DeleteEmployee(name string) (int64, error) {
-	ctx := context.Background()
-
-	// Check if database is alive.
-	err := db.PingContext(ctx)
-	if err != nil {
-		return -1, err
-	}
-
-	tsql := fmt.Sprintf("DELETE FROM TestSchema.Employees WHERE Name = @Name;")
-
-	// Execute non-query with named parameters
-	result, err := db.ExecContext(ctx, tsql, sql.Named("Name", name))
-	if err != nil {
-		return -1, err
-	}
-
-	return result.RowsAffected()
 }
